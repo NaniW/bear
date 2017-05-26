@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
-var Bear = require('./models/bear');
+var Starwars = require('./models/starwars');
 
 app.use(bodyParser.urlencoded({ extended : true }));
 app.use(bodyParser.json());
@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;
 var router = express.Router();
 
-mongoose.connect('mongodb://localhost/bears');
+mongoose.connect('mongodb://localhost/starwars');
 
 router.use(function(res, req, next) {
   console.log("something is happening");
@@ -24,64 +24,58 @@ router.get('/', function(req, res) {
 })
 
 
-router.route('/bears')
+router.route('/starwars')
 
   .post(function(req, res){
-    var bear = new Bear();
-    bear.name = req.body.name;
-    bear.hat = req.body.hat;
-    bear.color = req.body.color;
-    bear.type = req.body.type;
+    var starwars = new starwars();
+    starwars.field.name = req.body.name;
 
-    bear.save(function(err) {
+    starwars.save(function(err) {
         if(err)
           res.send(err);
-        res.json({ message: "Bear Created!" })
+        res.json({ message: "Starwars Created!" })
       })
     })
 
 
   .get(function(req, res){
-    Bear.find(function(err, bears){
+    Starwars.find(function(err, starwars){
       if(err)
         res.send(err)
-      res.json(bears)
+      res.json(starwars)
     })
   })
 
-router.route('/bears/:bear_id')
+router.route('/starwars/:starwars_id')
 
   .get(function(req, res){
-    Bear.findById(req.params.bear_id, function(err, bear){
+    Starwars.findById(req.params.starwars_id, function(err, starwars){
       if(err)
         res.send(err);
-      res.json(bear)
+      res.json(starwars)
     });
   })
 
   .put(function(req,res){
-    Bear.findById(req.params.bear_id, function(err, bear){
+    Starwars.findById(req.params.starwars_id, function(err, starwars){
       if(err)
         res.send(err);
-      bear.name = req.body.name;
-      bear.hat = req.body.hat;
-      bear.color = req.body.color;
-      bear.type = req.body.type;
-      bear.save(function(err) {
+      starwars.field.name = req.body.name;
+            starwars.save(function(err) {
         if(err)
           res.send(err);
-        res.json({ message: "Bear Saved!" })
+        res.json({ message: "Starwars Saved!" })
       })
     })
   })
 
   .delete(function(req, res){
-    Bear.remove({
-      _id: req.params.bear_id
-    }, function(err, bear) {
+    Starwars.remove({
+      _id: req.params.starwars_id
+    }, function(err, starwars) {
       if(err)
         res.send(err);
-        res.json({ message: "Now is dead bear."});
+        res.json({ message: "Now is dead Starwars."});
     });
   });
 
